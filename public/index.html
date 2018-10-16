@@ -1,10 +1,30 @@
 <!doctype html>
 <html>
 <head>
-    <title></title>
+    <title>IMAGE-BOARD</title>
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
+    <div id="main">
+        <div class="upload-container">
+            <input type="text" name="title" v-model="title" placeholder="title">
+            <input type="text" name="desc" v-model="desc" placeholder="description">
+            <input type="text" name="username" v-model="username" placeholder="username">
+            <input type="file" accept="image/*" name="file" @change="handleFileChange">
+            <br>
+            <button type="button" name="button" @click="upload">UPLOAD</button>
+        </div>
+        <div class="card-container">
+            <div  class="img-card" v-for="img in images">
+                <img :src="img.url" :alt="img.title">
+                <h3>{{img.title}}</h3>
+                <p>{{img.description}}</p>
+                <h4>{{img.username}}</h4>
+            </div>
+        </div>
+    </div>
     <script src="/js/vue.js"></script>
     <script src="/js/axios.min.js"></script>
+    <script src="/js/script.js"></script>
 </body>
 </html>
