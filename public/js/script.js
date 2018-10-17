@@ -7,7 +7,7 @@
                 comment: "some comment"
             };
         },
-        template: "#comments-template"
+        template: "#add-comment-template"
     });
     Vue.component("comments", {
         props: ["id"],
