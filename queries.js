@@ -1,6 +1,6 @@
 const db = require("./db").db;
 
-const getImages = function() {
+const getAllImages = function() {
     const q = `
         SELECT * FROM images;
     `;
@@ -14,8 +14,22 @@ const getImages = function() {
         });
 };
 
+const getImage = function(id) {
+    const q = `
+        SELECT * FROM images
+        WHERE id = $1;
+    `;
+    return db
+        .query(q, [id])
+        .then(results => {
+            return results.rows[0];
+        })
+        .catch(err => {
+            console.log(err.message);
+        });
+};
+
 const saveImage = function(data) {
-    console.log("saving image");
     const q = `
         INSERT INTO images
         (url, username, title, description)
@@ -40,6 +54,7 @@ const saveImage = function(data) {
 };
 
 module.exports = {
-    getImages,
+    getAllImages,
+    getImage,
     saveImage
 };

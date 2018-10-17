@@ -7,7 +7,7 @@ const path = require("path");
 const { upload } = require("./s3");
 const { s3Url } = require("./config.json");
 
-const { getImages, saveImage } = require("./queries");
+const { getAllImages, saveImage, getImage } = require("./queries");
 
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -32,14 +32,18 @@ const uploader = multer({
 });
 
 app.get("/images", (req, res) => {
-    console.log("something");
-    getImages().then(results => {
+    getAllImages().then(results => {
+        res.json(results);
+    });
+});
+
+app.get("/image", (req, res) => {
+    getImage(req.query.id).then(results => {
         res.json(results);
     });
 });
 
 app.post("/upload", uploader.single("file"), upload, function(req, res) {
-    // If nothing went wrong the file is already in the uploads directory
     const imgUrl = s3Url + req.file.filename;
     const data = {
         url: imgUrl,
@@ -50,22 +54,11 @@ app.post("/upload", uploader.single("file"), upload, function(req, res) {
 
     saveImage(data)
         .then(results => {
-            console.log("savedDB", results);
             res.json(results);
         })
         .catch(err => {
             console.log(err.message);
         });
-
-    // if (req.file) {
-    //     res.json({
-    //         sucess:true
-    //     });
-    // } else {
-    //     res.json({
-    //         success: false
-    //     });
-    // }
 });
 
 app.listen(8080, () => console.log("listening on 8080"));

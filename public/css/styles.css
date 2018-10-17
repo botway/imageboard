@@ -29,3 +29,17 @@ img {
     border-radius: 0.4em;
     align-self: center;
 }
+
+.img-modal {
+    position: fixed;
+    border: solid 1px grey;
+    border-radius: 0.5em;
+    background-color: white;
+    padding: 1em;
+    top: 50%;
+    transform: translateY(-50%);
+}
+.img-modal img {
+    width: 70%;
+    height: 70%;
+}

@@ -6,6 +6,12 @@
 </head>
 <body>
     <div id="main">
+        <image-modal
+            v-if="imgId"
+            :id="imgId"
+            v-on:close="closeModal">
+            <comments></comments>
+        </image-modal>
         <div class="upload-container">
             <input type="text" name="title" v-model="title" placeholder="title">
             <input type="text" name="desc" v-model="desc" placeholder="description">
@@ -15,14 +21,39 @@
             <button type="button" name="button" @click="upload">UPLOAD</button>
         </div>
         <div class="card-container">
-            <div  class="img-card" v-for="img in images">
-                <img :src="img.url" :alt="img.title">
+            <div class="img-card" v-for="img in images">
+                <img :src="img.url" :alt="img.title" @click="clickImg(img.id)">
                 <h3>{{img.title}}</h3>
                 <p>{{img.description}}</p>
                 <h4>{{img.username}}</h4>
             </div>
         </div>
     </div>
+    <script id="img-modal-template" type="text/x-template">
+        <div class="img-modal" @click="clickClose">
+            <h1>{{title}}</h1>
+            <img :src="url" :alt="title">
+            <p>{{desc}}</p>
+            <p>{{username}}</p>
+            <slot></slot>
+        </div>
+    </script>
+    <script id="comments-template" type="text/x-template">
+        <div class="comment">
+            <h1>Comments</h1>
+            <h2>{{title}}</h2>
+            <p>{{comment}}</p>
+            <p>{{username}}</p>
+            <p>{{created}}</p>
+        </div>
+    </script>
+    <script id="add-comment-template" type="text/x-template">
+        <div class="add-comment">
+            <input type="text" name="comment" v-model="comment" placeholder="your comment"></input>
+            <input type="text" name="username" v-model="username" placeholder="username"></input>
+            <button type="button" name="button" @click="comment">Submit</button>
+        </div>
+    </script>
     <script src="/js/vue.js"></script>
     <script src="/js/axios.min.js"></script>
     <script src="/js/script.js"></script>
