@@ -7,7 +7,13 @@ const path = require("path");
 const { upload } = require("./s3");
 const { s3Url } = require("./config.json");
 
-const { getAllImages, saveImage, getImage } = require("./queries");
+const {
+    getAllImages,
+    saveImage,
+    getImage,
+    addComment,
+    getComments
+} = require("./queries");
 
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -38,11 +44,27 @@ app.get("/images", (req, res) => {
 });
 
 app.get("/image", (req, res) => {
-    getImage(req.query.id).then(results => {
-        res.json(results);
-    });
-});
+    const image = getImage(req.query.id);
+    const comments = getComments(req.query.id);
 
+    Promise.all([image, comments])
+        .then(results => {
+            res.json(results);
+        })
+        .catch(err => {
+            console.log(err.message);
+        });
+    // getImage(req.query.id).then(results => {
+    //     res.json(results);
+    // });
+});
+app.post("/comment", (req, res) => {
+    addComment(req.body)
+        .then(results => {
+            res.json(results);
+        })
+        .catch(err => console.log(err.message));
+});
 app.post("/upload", uploader.single("file"), upload, function(req, res) {
     const imgUrl = s3Url + req.file.filename;
     const data = {

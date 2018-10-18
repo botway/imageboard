@@ -53,8 +53,42 @@ const saveImage = function(data) {
         .catch(err => console.log(err.message));
 };
 
+const getComments = function(id) {
+    const q = `
+        SELECT * FROM comments
+        WHERE image_id = $1
+    `;
+    return db
+        .query(q, [id])
+        .then(results => {
+            return results.rows;
+        })
+        .catch(err => console.log(err.message));
+};
+
+const addComment = function(data) {
+    const q = `
+        INSERT INTO comments
+        (comment, image_id, username)
+        VALUES
+        ($1, $2, $3)
+        RETURNING comment, username, image_id
+    `;
+
+    const params = [data.comment, data.image_id, data.username];
+
+    return db
+        .query(q, params)
+        .then(results => {
+            return results.rows[0];
+        })
+        .catch(err => console.log(err.message));
+};
+
 module.exports = {
     getAllImages,
     getImage,
-    saveImage
+    saveImage,
+    getComments,
+    addComment
 };

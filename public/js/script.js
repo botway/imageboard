@@ -1,34 +1,44 @@
 (function() {
     Vue.component("add-comment", {
-        props: ["id"],
+        props: ["imgid"],
         data: function() {
             return {
-                username: "some user",
-                comment: "some comment"
+                username: "",
+                comment: ""
             };
+        },
+        methods: {
+            addComment: function() {
+                var comment = {
+                    username: this.username,
+                    comment: this.comment,
+                    image_id: this.imgid
+                };
+                this.$emit("insert", comment);
+                axios
+                    .post("/comment", {
+                        comment
+                    })
+                    .then(function(results) {
+                        console.log(results);
+                    });
+            }
         },
         template: "#add-comment-template"
     });
     Vue.component("comments", {
-        props: ["id"],
-        data: function() {
-            return {
-                title: "some title",
-                username: "some user",
-                comment: "Some comment",
-                created: "11/11/2011"
-            };
-        },
+        props: ["imgid", "username", "comment", "created"],
         template: "#comments-template"
     });
     Vue.component("image-modal", {
-        props: ["id"],
+        props: ["imgid"],
         data: function() {
             return {
                 url: "",
                 title: "",
                 desc: "",
-                username: ""
+                username: "",
+                comments: []
             };
         },
         mounted: function() {
@@ -36,14 +46,15 @@
             axios
                 .get("/image", {
                     params: {
-                        id: this.id
+                        id: this.imgid
                     }
                 })
                 .then(function(response) {
-                    self.url = response.data.url;
-                    self.title = response.data.title;
-                    self.desc = response.data.description;
-                    self.username = response.data.username;
+                    self.url = response.data[0].url;
+                    self.title = response.data[0].title;
+                    self.desc = response.data[0].description;
+                    self.username = response.data[0].username;
+                    self.comments = response.data[1];
                 })
                 .catch(function(err) {
                     console.log(err.message);
@@ -52,7 +63,10 @@
         template: "#img-modal-template",
         methods: {
             clickClose: function() {
-                this.$emit("close");
+                // this.$emit("close");
+            },
+            updateComments: function(data) {
+                this.comments.unshift(data);
             }
         }
     });
