@@ -2,10 +2,34 @@ const db = require("./db").db;
 
 const getAllImages = function() {
     const q = `
-        SELECT * FROM images;
+        SELECT * FROM images
+        ORDER BY id DESC
+        LIMIT 3;
     `;
     return db
         .query(q)
+        .then(results => {
+            return results.rows;
+        })
+        .catch(err => {
+            console.log(err.message);
+        });
+};
+
+const getMoreImages = function(lastid) {
+    const q = `
+        SELECT *, (
+            SELECT id FROM images
+            ORDER BY id ASC
+            LIMIT 1
+        ) AS last FROM images
+        WHERE id < $1
+        ORDER BY id DESC
+        LIMIT 3;
+    `;
+
+    return db
+        .query(q, [lastid])
         .then(results => {
             return results.rows;
         })
@@ -55,8 +79,9 @@ const saveImage = function(data) {
 
 const getComments = function(id) {
     const q = `
-        SELECT * FROM comments
-        WHERE image_id = $1
+        SELECT comment, username, created_at
+        FROM comments
+        WHERE image_id = $1;
     `;
     return db
         .query(q, [id])
@@ -87,6 +112,7 @@ const addComment = function(data) {
 
 module.exports = {
     getAllImages,
+    getMoreImages,
     getImage,
     saveImage,
     getComments,

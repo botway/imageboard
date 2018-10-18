@@ -27,27 +27,31 @@
                 <h4>{{img.username}}</h4>
             </div>
         </div>
+        <button v-if="hasMore" type="button" name="more" @click="getMore">MORE</button>
     </div>
     <script id="img-modal-template" type="text/x-template">
-        <div class="img-modal" @click="clickClose">
-            <h1>{{title}}</h1>
-            <img :src="url" :alt="title">
-            <p>{{desc}}</p>
-            <p>{{username}}</p>
-            <add-comment :imgid="imgid" v-on:insert="updateComments"></add-comment>
-            <comments
-                v-for="c in comments"
-                :key="c.id"
-                :username="c.username"
-                :comment="c.comment"
-                :created="c.created_at"
-                >
-            </comments>
+        <div class="modal">
+            <div class="overlay"></div>
+            <div class="img-modal-window">
+                <button type="button" name="close" @click="clickClose">CLOSE</button>
+                <h1>{{title}}</h1>
+                <img :src="url" :alt="title">
+                <p>{{desc}}</p>
+                <p>{{username}}</p>
+                <add-comment :imgid="imgid" v-on:insert="updateComments"></add-comment>
+                <comments
+                    v-for="c in comments"
+                    :key="c.id"
+                    :username="c.username"
+                    :comment="c.comment"
+                    :created="c.created_at"
+                    >
+                </comments>
+            </div>
         </div>
     </script>
     <script id="comments-template" type="text/x-template">
         <div class="comment">
-            <p>Comment</p>
             <p>{{comment}}</p>
             <p>{{username}}</p>
             <p>{{created}}</p>
@@ -55,7 +59,6 @@
     </script>
     <script id="add-comment-template" type="text/x-template">
         <div class="add-comment">
-            <p>img_id {{imgid}}</p>
             <input type="text" name="comment" v-model="comment" placeholder="your comment"></input>
             <input type="text" name="username" v-model="username" placeholder="username"></input>
             <button type="button" name="button" @click="addComment">Submit</button>

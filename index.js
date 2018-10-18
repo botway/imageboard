@@ -9,6 +9,7 @@ const { s3Url } = require("./config.json");
 
 const {
     getAllImages,
+    getMoreImages,
     saveImage,
     getImage,
     addComment,
@@ -37,8 +38,17 @@ const uploader = multer({
     }
 });
 
-app.get("/images", (req, res) => {
-    getAllImages().then(results => {
+app.get("/images/", (req, res) => {
+    getAllImages(req.query.num).then(results => {
+        res.json(results);
+    });
+    // getSomeImages(req.query.id).then(results => {
+    //     res.json(results);
+    // });
+});
+
+app.get("/images/more", (req, res) => {
+    getMoreImages(req.query.id).then(results => {
         res.json(results);
     });
 });
@@ -54,12 +64,9 @@ app.get("/image", (req, res) => {
         .catch(err => {
             console.log(err.message);
         });
-    // getImage(req.query.id).then(results => {
-    //     res.json(results);
-    // });
 });
 app.post("/comment", (req, res) => {
-    addComment(req.body)
+    addComment(req.body.comment)
         .then(results => {
             res.json(results);
         })

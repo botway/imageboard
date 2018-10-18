@@ -63,7 +63,7 @@
         template: "#img-modal-template",
         methods: {
             clickClose: function() {
-                // this.$emit("close");
+                this.$emit("close");
             },
             updateComments: function(data) {
                 this.comments.unshift(data);
@@ -74,21 +74,32 @@
         el: "#main",
         data: {
             title: "",
+            hasMore: true,
             username: "",
             desc: "",
             images: [],
             imgId: ""
+            //imgID: location.hash.slice(1)
         },
         mounted: function() {
             var self = this;
+            //addEventListener("hashchange", function(){self.imgId})
+            //move ajax request function to methods to be reused
             axios
                 .get("/images")
                 .then(function(response) {
                     self.images = response.data;
+                    //if(!resonse.data.image){self.$emit("close")}
                 })
                 .catch(function(err) {
                     console.log(err.message);
+                    //self.$emit("close");
                 });
+        },
+        watch: {
+            // imgId: function() {
+            //     axios.get("/images" + this.id);
+            // }
         },
         methods: {
             handleFileChange: function(e) {
@@ -96,6 +107,34 @@
             },
             clickImg: function(imgId) {
                 this.imgId = imgId;
+            },
+            getMore: function() {
+                var self = this;
+                axios
+                    .get("/images/more", {
+                        params: {
+                            id: this.images[this.images.length - 1].id
+                        }
+                    })
+                    .then(function(response) {
+                        self.images = self.images.concat(response.data);
+                        if (
+                            self.images[self.images.length - 1].id ==
+                            response.data[0].last
+                        ) {
+                            self.hasMore = false;
+                            return;
+                        }
+                        // if (!response.data.length) {
+                        //     self.hasMore = false;
+                        //     return;
+                        // }
+                        //if(!resonse.data.image){self.$emit("close")}
+                    })
+                    .catch(function(err) {
+                        console.log(err.message);
+                        //self.$emit("close");
+                    });
             },
             closeModal: function() {
                 this.imgId = "";
