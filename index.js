@@ -4,16 +4,18 @@ const bodyParser = require("body-parser");
 const multer = require("multer");
 const uidSafe = require("uid-safe");
 const path = require("path");
-const { upload } = require("./s3");
+const { upload, delImg } = require("./s3");
 const { s3Url } = require("./config.json");
 
 const {
     getAllImages,
     getMoreImages,
     saveImage,
+    delImage,
     getImage,
     addComment,
-    getComments
+    getComments,
+    delComments
 } = require("./queries");
 
 app.use(express.static("public"));
@@ -84,6 +86,20 @@ app.post("/upload", uploader.single("file"), upload, function(req, res) {
     saveImage(data)
         .then(results => {
             res.json(results);
+        })
+        .catch(err => {
+            console.log(err.message);
+        });
+});
+
+app.post("/delete", delImg, (req, res) => {
+    const image = delImage(req.body.id);
+    const comments = delComments(req.body.id);
+
+    Promise.all([image, comments])
+        .then(() => {
+            console.log("image and comments were wiped out");
+            res.json({ deleted: true });
         })
         .catch(err => {
             console.log(err.message);

@@ -9,7 +9,9 @@
         <image-modal
             v-if="imgId"
             :imgid="imgId"
-            v-on:close="closeModal">
+            v-on:close="closeModal"
+            v-on:remove="delImgCard"
+            >
         </image-modal>
         <div class="upload-container">
             <input type="text" name="title" v-model="title" placeholder="title">
@@ -18,6 +20,7 @@
             <input type="file" accept="image/*" name="file" @change="handleFileChange">
             <br>
             <button type="button" name="button" @click="upload">UPLOAD</button>
+            <button type="button" name="remove" @click="delImgCard(4)">REMOVE</button>
         </div>
         <div class="card-container">
             <div class="img-card" v-for="img in images">
@@ -36,6 +39,7 @@
                 <button type="button" name="close" @click="clickClose">CLOSE</button>
                 <a class="prev" :href="'#' + prev" v-if="prev"><<</a>
                 <a class="next" :href="'#' + next" v-if="next">>></a>
+                <button type="button" name="delete" @click="delImg">DELETE</button>
                 <h1>{{title}}</h1>
                 <img :src="url" :alt="title">
                 <p>{{desc}}</p>

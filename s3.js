@@ -1,5 +1,6 @@
 const knox = require("knox");
 const fs = require("fs");
+const { s3Url } = require("./config.json");
 
 let secrets;
 
@@ -15,7 +16,7 @@ const client = knox.createClient({
     bucket: "spicedling"
 });
 
-exports.upload = function(req, res, next) {
+const upload = function(req, res, next) {
     if (!req.file) {
         return res.sendStatus(500);
     }
@@ -36,4 +37,26 @@ exports.upload = function(req, res, next) {
         }
     });
     fs.unlink(req.file.path, () => {});
+};
+
+const delImg = function(req, res, next) {
+    const fileName = req.body.imgUrl.replace(s3Url, "");
+    console.log("FN", fileName);
+    // client.del("/" + fileName).on("response", function(res) {
+    //     console.log("deleted statc", res.statusCode);
+    //     next();
+    // });
+    client.deleteFile(fileName, (err, res) => {
+        if (err) {
+            console.log(err.message);
+        } else {
+            console.log(res.statusCode);
+            next();
+        }
+    });
+};
+
+module.exports = {
+    upload,
+    delImg
 };

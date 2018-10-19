@@ -81,6 +81,20 @@ const saveImage = function(data) {
         .catch(err => console.log(err.message));
 };
 
+const delImage = function(id) {
+    console.log("img_ID", id);
+    const q = `
+        DELETE FROM images
+        WHERE id =$1;
+    `;
+    return db
+        .query(q, [id])
+        .then(() => {
+            console.log("img was deleted from db");
+        })
+        .catch(err => console.log(err.message));
+};
+
 const getComments = function(id) {
     const q = `
         SELECT comment, username, created_at
@@ -114,11 +128,27 @@ const addComment = function(data) {
         .catch(err => console.log(err.message));
 };
 
+const delComments = function(id) {
+    console.log("commets", id);
+    const q = `
+        DELETE FROM comments
+        WHERE image_id = $1;
+    `;
+    return db
+        .query(q, [id])
+        .then(() => {
+            console.log("comments were deleted from db");
+        })
+        .catch(err => console.log(err.message));
+};
+
 module.exports = {
     getAllImages,
     getMoreImages,
     getImage,
     saveImage,
+    delImage,
     getComments,
-    addComment
+    addComment,
+    delComments
 };

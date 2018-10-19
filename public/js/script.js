@@ -56,6 +56,18 @@
             clickClose: function() {
                 this.$emit("close");
             },
+            delImg: function() {
+                var self = this;
+                axios
+                    .post("/delete", { imgUrl: this.url, id: this.imgid })
+                    .then(function(response) {
+                        self.$emit("close");
+                        self.$emit("remove", this.imgid);
+                    })
+                    .catch(function(err) {
+                        console.log(err.message);
+                    });
+            },
             updateComments: function(data) {
                 this.comments.unshift(data);
             },
@@ -98,19 +110,23 @@
         },
         mounted: function() {
             var self = this;
+            this.getImages();
             addEventListener("hashchange", function() {
                 self.imgId = location.hash.slice(1);
             });
-            axios
-                .get("/images")
-                .then(function(response) {
-                    self.images = response.data;
-                })
-                .catch(function(err) {
-                    console.log(err.message);
-                });
         },
         methods: {
+            getImages: function() {
+                var self = this;
+                axios
+                    .get("/images")
+                    .then(function(response) {
+                        self.images = response.data;
+                    })
+                    .catch(function(err) {
+                        console.log(err.message);
+                    });
+            },
             handleFileChange: function(e) {
                 this.file = e.target.files[0];
             },
@@ -144,6 +160,11 @@
                 this.imgId = "";
                 location.hash = "";
             },
+            delImgCard: function(id) {
+                // console.log(this.images, id);
+                //filterArray(id);
+                this.getImages();
+            },
             upload: function() {
                 var formData = new FormData();
                 formData.append("file", this.file);
@@ -156,4 +177,5 @@
             }
         }
     });
+    function filterArray() {}
 })();
