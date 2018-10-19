@@ -34,6 +34,8 @@
             <div class="overlay"></div>
             <div class="img-modal-window">
                 <button type="button" name="close" @click="clickClose">CLOSE</button>
+                <a class="prev" :href="'#' + prev" v-if="prev"><<</a>
+                <a class="next" :href="'#' + next" v-if="next">>></a>
                 <h1>{{title}}</h1>
                 <img :src="url" :alt="title">
                 <p>{{desc}}</p>

@@ -40,12 +40,16 @@ const getMoreImages = function(lastid) {
 
 const getImage = function(id) {
     const q = `
-        SELECT * FROM images
+        SELECT *,
+        (SELECT id FROM images WHERE id > $1 ORDER BY id ASC LIMIT 1) AS prev,
+        (SELECT id FROM images WHERE id < $1 ORDER BY id DESC LIMIT 1) AS next
+        FROM images
         WHERE id = $1;
     `;
     return db
         .query(q, [id])
         .then(results => {
+            console.log(results.rows[0]);
             return results.rows[0];
         })
         .catch(err => {

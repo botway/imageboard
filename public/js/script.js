@@ -38,7 +38,9 @@
                 title: "",
                 desc: "",
                 username: "",
-                comments: []
+                comments: [],
+                next: "",
+                prev: ""
             };
         },
         mounted: function() {
@@ -74,6 +76,8 @@
                         self.desc = response.data[0].description;
                         self.username = response.data[0].username;
                         self.comments = response.data[1];
+                        self.next = response.data[0].next;
+                        self.prev = response.data[0].prev;
                     })
                     .catch(function(err) {
                         self.$emit("close");
