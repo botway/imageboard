@@ -42,31 +42,43 @@
             };
         },
         mounted: function() {
-            var self = this;
-            axios
-                .get("/image", {
-                    params: {
-                        id: this.imgid
-                    }
-                })
-                .then(function(response) {
-                    self.url = response.data[0].url;
-                    self.title = response.data[0].title;
-                    self.desc = response.data[0].description;
-                    self.username = response.data[0].username;
-                    self.comments = response.data[1];
-                })
-                .catch(function(err) {
-                    console.log(err.message);
-                });
+            this.getModalContent();
         },
         template: "#img-modal-template",
+        watch: {
+            imgid: function() {
+                this.getModalContent();
+            }
+        },
         methods: {
             clickClose: function() {
                 this.$emit("close");
             },
             updateComments: function(data) {
                 this.comments.unshift(data);
+            },
+            getModalContent: function() {
+                var self = this;
+                axios
+                    .get("/image", {
+                        params: {
+                            id: self.imgid
+                        }
+                    })
+                    .then(function(response) {
+                        if (!response.data) {
+                            self.$emit("close");
+                        }
+                        self.url = response.data[0].url;
+                        self.title = response.data[0].title;
+                        self.desc = response.data[0].description;
+                        self.username = response.data[0].username;
+                        self.comments = response.data[1];
+                    })
+                    .catch(function(err) {
+                        self.$emit("close");
+                        console.log(err.message);
+                    });
             }
         }
     });
@@ -78,28 +90,21 @@
             username: "",
             desc: "",
             images: [],
-            imgId: ""
-            //imgID: location.hash.slice(1)
+            imgId: location.hash.slice(1)
         },
         mounted: function() {
             var self = this;
-            //addEventListener("hashchange", function(){self.imgId})
-            //move ajax request function to methods to be reused
+            addEventListener("hashchange", function() {
+                self.imgId = location.hash.slice(1);
+            });
             axios
                 .get("/images")
                 .then(function(response) {
                     self.images = response.data;
-                    //if(!resonse.data.image){self.$emit("close")}
                 })
                 .catch(function(err) {
                     console.log(err.message);
-                    //self.$emit("close");
                 });
-        },
-        watch: {
-            // imgId: function() {
-            //     axios.get("/images" + this.id);
-            // }
         },
         methods: {
             handleFileChange: function(e) {
@@ -120,24 +125,20 @@
                         self.images = self.images.concat(response.data);
                         if (
                             self.images[self.images.length - 1].id ==
-                            response.data[0].last
+                                response.data[0].last ||
+                            !response.data.length
                         ) {
                             self.hasMore = false;
                             return;
                         }
-                        // if (!response.data.length) {
-                        //     self.hasMore = false;
-                        //     return;
-                        // }
-                        //if(!resonse.data.image){self.$emit("close")}
                     })
                     .catch(function(err) {
                         console.log(err.message);
-                        //self.$emit("close");
                     });
             },
             closeModal: function() {
                 this.imgId = "";
+                location.hash = "";
             },
             upload: function() {
                 var formData = new FormData();

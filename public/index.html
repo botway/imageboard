@@ -21,7 +21,7 @@
         </div>
         <div class="card-container">
             <div class="img-card" v-for="img in images">
-                <img :src="img.url" :alt="img.title" @click="clickImg(img.id)">
+                <a :href="'#' + img.id"><img :src="img.url" :alt="img.title"></a>
                 <h3>{{img.title}}</h3>
                 <p>{{img.description}}</p>
                 <h4>{{img.username}}</h4>
