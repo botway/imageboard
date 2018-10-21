@@ -1,4 +1,6 @@
 (function() {
+    var VueMasonryPlugin = window["vue-masonry-plugin"].VueMasonryPlugin;
+    Vue.use(VueMasonryPlugin);
     Vue.component("add-comment", {
         props: ["imgid"],
         data: function() {
@@ -73,6 +75,7 @@
             },
             getModalContent: function() {
                 var self = this;
+                console.log("id", self.imgid);
                 axios
                     .get("/image", {
                         params: {
@@ -105,8 +108,9 @@
             hasMore: true,
             username: "",
             desc: "",
+            imgurl: "",
             images: [],
-            imgId: location.hash.slice(1)
+            imgId: ""
         },
         mounted: function() {
             var self = this;
@@ -171,7 +175,10 @@
                 formData.append("desc", this.desc);
                 formData.append("title", this.title);
                 formData.append("username", this.username);
+                formData.append("imgurl", this.imgurl);
                 axios.post("/upload", formData).then(results => {
+                    console.log("results", results);
+                    // console.log("post upload res:", results.data);
                     this.images.unshift(results.data);
                 });
             }

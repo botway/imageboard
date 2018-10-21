@@ -16,8 +16,11 @@
     "express": "^4.14.0",
     "knox": "^0.9.2",
     "multer": "^1.4.1",
+    "request": "^2.88.0",
     "spiced-pg": "^1.0.0",
-    "uid-safe": "^2.1.5"
+    "uid-safe": "^2.1.5",
+    "vue-masonry": "^0.11.6",
+    "vue-scrollto": "^2.13.0"
   },
   "repository": {
     "type": "git",

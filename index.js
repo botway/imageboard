@@ -1,5 +1,7 @@
 const express = require("express");
 const app = express();
+const request = require("request");
+const fs = require("fs");
 const bodyParser = require("body-parser");
 const multer = require("multer");
 const uidSafe = require("uid-safe");
@@ -19,8 +21,8 @@ const {
 } = require("./queries");
 
 app.use(express.static("public"));
-app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 const diskStorage = multer.diskStorage({
     destination: function(req, file, callback) {
@@ -40,13 +42,61 @@ const uploader = multer({
     }
 });
 
+const isUrl = function(req, res, next) {
+    console.log("fofo", req.body);
+    let str = req.body.imgurl;
+    if (str.startsWith("http://") || str.startsWith("https://")) {
+        download(str, results => {
+            req.file = results;
+            next();
+        });
+    } else {
+        next();
+    }
+};
+
+const download = function(url, cb) {
+    request.head(url, (err, res, body) => {
+        let ext = "." + res.headers["content-type"].split("/")[1];
+        let filename = uidSafe.sync(24) + ext;
+        let path = __dirname + "/uploads/" + filename;
+
+        const file = {
+            filename: filename,
+            mimetype: res.headers["content-type"],
+            size: res.headers["content-length"],
+            path: path
+        };
+        request(url)
+            .pipe(fs.createWriteStream(path))
+            .on("close", () => {
+                cb(file);
+            });
+    });
+};
+
+app.post("/upload", uploader.single("file"), isUrl, upload, function(req, res) {
+    console.log(req.body, req.file);
+    const imgUrl = s3Url + req.file.filename;
+    const data = {
+        url: imgUrl,
+        username: req.body.username,
+        title: req.body.title,
+        description: req.body.desc
+    };
+    saveImage(data)
+        .then(results => {
+            res.json(results);
+        })
+        .catch(err => {
+            console.log(err.message);
+        });
+});
+
 app.get("/images/", (req, res) => {
     getAllImages(req.query.num).then(results => {
         res.json(results);
     });
-    // getSomeImages(req.query.id).then(results => {
-    //     res.json(results);
-    // });
 });
 
 app.get("/images/more", (req, res) => {
@@ -73,23 +123,6 @@ app.post("/comment", (req, res) => {
             res.json(results);
         })
         .catch(err => console.log(err.message));
-});
-app.post("/upload", uploader.single("file"), upload, function(req, res) {
-    const imgUrl = s3Url + req.file.filename;
-    const data = {
-        url: imgUrl,
-        username: req.body.username,
-        title: req.body.title,
-        description: req.body.desc
-    };
-
-    saveImage(data)
-        .then(results => {
-            res.json(results);
-        })
-        .catch(err => {
-            console.log(err.message);
-        });
 });
 
 app.post("/delete", delImg, (req, res) => {

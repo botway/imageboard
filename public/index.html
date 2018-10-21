@@ -3,6 +3,7 @@
 <head>
     <title>IMAGE-BOARD</title>
     <link rel="stylesheet" href="/css/styles.css">
+    <link href="https://fonts.googleapis.com/css?family=Life+Savers:700" rel="stylesheet">
 </head>
 <body>
     <div id="main">
@@ -14,23 +15,32 @@
             >
         </image-modal>
         <div class="upload-container">
+            <h1>IMGY</h1>
             <input type="text" name="title" v-model="title" placeholder="title">
             <input type="text" name="desc" v-model="desc" placeholder="description">
             <input type="text" name="username" v-model="username" placeholder="username">
-            <input type="file" accept="image/*" name="file" @change="handleFileChange">
             <br>
-            <button type="button" name="button" @click="upload">UPLOAD</button>
-            <button type="button" name="remove" @click="delImgCard(4)">REMOVE</button>
+            <input type="file" accept="image/*" name="file" @change="handleFileChange">
+            <input type="text" name="imgurl" v-model="imgurl" placeholder="paste url">
+            <button type="button" name="button" @click="upload">SUBMIT</button>
         </div>
-        <div class="card-container">
-            <div class="img-card" v-for="img in images">
-                <a :href="'#' + img.id"><img :src="img.url" :alt="img.title"></a>
-                <h3>{{img.title}}</h3>
-                <p>{{img.description}}</p>
-                <h4>{{img.username}}</h4>
+        <div class="container">
+            <div v-masonry class="card-container" transition-duration="0.7s" item-selector=".img-card">
+                <div v-masonry-tile class="img-card" v-for="(img,index) in images">
+                    <div v-if="index == images.length - 1" class="last"></div>
+                    <a :href="'#' + img.id"><img :src="img.url" :alt="img.title"></a>
+                    <h3>{{img.title}}</h3>
+                    <p>{{img.description}}</p>
+                    <h4>{{img.username}}</h4>
+                </div>
             </div>
+            <button v-if="hasMore" type="button" name="more" @click="getMore"
+            v-scroll-to="{
+                el:'.last', duration:2500,
+                easing: 'ease-in-out',
+                offset: 200
+            }">MORE</button>
         </div>
-        <button v-if="hasMore" type="button" name="more" @click="getMore">MORE</button>
     </div>
     <script id="img-modal-template" type="text/x-template">
         <div class="modal">
@@ -71,6 +81,8 @@
         </div>
     </script>
     <script src="/js/vue.js"></script>
+    <script src="https://unpkg.com/vue-scrollto@2.7.9/vue-scrollto.js"></script>
+    <script src="/js/vue-masonry-plugin-window.js"></script>
     <script src="/js/axios.min.js"></script>
     <script src="/js/script.js"></script>
 </body>

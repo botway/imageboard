@@ -17,6 +17,7 @@ const client = knox.createClient({
 });
 
 const upload = function(req, res, next) {
+    console.log("uploading", req.file);
     if (!req.file) {
         return res.sendStatus(500);
     }
@@ -41,11 +42,6 @@ const upload = function(req, res, next) {
 
 const delImg = function(req, res, next) {
     const fileName = req.body.imgUrl.replace(s3Url, "");
-    console.log("FN", fileName);
-    // client.del("/" + fileName).on("response", function(res) {
-    //     console.log("deleted statc", res.statusCode);
-    //     next();
-    // });
     client.deleteFile(fileName, (err, res) => {
         if (err) {
             console.log(err.message);

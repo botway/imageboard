@@ -4,7 +4,7 @@ const getAllImages = function() {
     const q = `
         SELECT * FROM images
         ORDER BY id DESC
-        LIMIT 3;
+        LIMIT 9;
     `;
     return db
         .query(q)
@@ -25,7 +25,7 @@ const getMoreImages = function(lastid) {
         ) AS last FROM images
         WHERE id < $1
         ORDER BY id DESC
-        LIMIT 3;
+        LIMIT 6;
     `;
 
     return db
@@ -63,7 +63,7 @@ const saveImage = function(data) {
         (url, username, title, description)
         VALUES
         ($1,$2,$3,$4)
-        RETURNING url, username, title, description;
+        RETURNING url, username, title, description,id;
     `;
 
     const params = [

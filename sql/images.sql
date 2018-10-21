@@ -30,6 +30,15 @@ INSERT INTO images (url, username, title, description) VALUES (
     'This is going to be worth a lot of money one day.'
 );
 
+INSERT INTO images (url, username, title, description) VALUES (
+    'https://s3.amazonaws.com/spicedling/-8Ow53HUN7YkkdstlIzA66I_suGptBKG.jpeg',
+    'pichunt',
+    'Doog',
+    'What are you looking?'
+);
+
+
+
 -- UPDATE images
 -- SET url = 'https://s3.amazonaws.com/spicedling/ADlZPvk5XELA8ZER8SpkTaM9nKh8aO7V.jpg'
 -- WHERE id = 4;
