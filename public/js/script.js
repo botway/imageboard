@@ -110,7 +110,8 @@
             desc: "",
             imgurl: "",
             images: [],
-            imgId: ""
+            imgId: "",
+            showupload: false
         },
         mounted: function() {
             var self = this;
@@ -169,6 +170,9 @@
                 //filterArray(id);
                 this.getImages();
             },
+            showUpload() {
+                this.showupload = "true";
+            },
             upload: function() {
                 var formData = new FormData();
                 formData.append("file", this.file);
@@ -179,7 +183,11 @@
                 axios.post("/upload", formData).then(results => {
                     console.log("results", results);
                     // console.log("post upload res:", results.data);
+                    this.showupload = false;
                     this.images.unshift(results.data);
+                    this.title = "";
+                    this.username = "";
+                    this.desc = "";
                 });
             }
         }

@@ -14,16 +14,19 @@
             v-on:remove="delImgCard"
             >
         </image-modal>
-        <div class="upload-container">
+        <header>
+            <img src="/assets/tucan.png" alt="logo" id="logo">
             <h1>IMGY</h1>
-            <input type="text" name="title" v-model="title" placeholder="title">
-            <input type="text" name="desc" v-model="desc" placeholder="description">
-            <input type="text" name="username" v-model="username" placeholder="username">
-            <br>
-            <input type="file" accept="image/*" name="file" @change="handleFileChange">
-            <input type="text" name="imgurl" v-model="imgurl" placeholder="paste url">
-            <button type="button" name="button" @click="upload">SUBMIT</button>
-        </div>
+            <button v-if="!showupload" type="button" class="add-pic" @click="showUpload">ADD PICS</button>
+            <div v-if="showupload" id="upload-container">
+                <input type="text" name="title" v-model="title" placeholder="title">
+                <input type="text" name="desc" v-model="desc" placeholder="description">
+                <input type="text" name="username" v-model="username" placeholder="username">
+                <input type="file" accept="image/*" name="file" @change="handleFileChange">
+                <input type="text" name="imgurl" v-model="imgurl" placeholder="paste url">
+                <button type="button" name="button" @click="upload">SUBMIT</button>
+            </div>
+        </header>
         <div class="container">
             <div v-masonry class="card-container" transition-duration="0.7s" item-selector=".img-card">
                 <div v-masonry-tile class="img-card" v-for="(img,index) in images">
@@ -38,7 +41,7 @@
             v-scroll-to="{
                 el:'.last', duration:2500,
                 easing: 'ease-in-out',
-                offset: 200
+                offset: 400
             }">MORE</button>
         </div>
     </div>
@@ -46,12 +49,12 @@
         <div class="modal">
             <div class="overlay"></div>
             <div class="img-modal-window">
-                <button type="button" name="close" @click="clickClose">CLOSE</button>
-                <a class="prev" :href="'#' + prev" v-if="prev"><<</a>
-                <a class="next" :href="'#' + next" v-if="next">>></a>
-                <button type="button" name="delete" @click="delImg">DELETE</button>
-                <h1>{{title}}</h1>
+                <a class="prev" :href="'#' + prev" v-if="prev">< </a>
+                <a class="next" :href="'#' + next" v-if="next"> ></a>
+                <button type="button" class="close-modal" name="close" @click="clickClose">X</button>
+                <h2>{{title}}</h2>
                 <img :src="url" :alt="title">
+                <button type="button" class="del-img" name="delete" @click="delImg">DELETE</button>
                 <p>{{desc}}</p>
                 <p>{{username}}</p>
                 <add-comment :imgid="imgid" v-on:insert="updateComments"></add-comment>

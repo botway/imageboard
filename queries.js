@@ -4,7 +4,7 @@ const getAllImages = function() {
     const q = `
         SELECT * FROM images
         ORDER BY id DESC
-        LIMIT 9;
+        LIMIT 15;
     `;
     return db
         .query(q)
