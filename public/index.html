@@ -48,15 +48,17 @@
     <script id="img-modal-template" type="text/x-template">
         <div class="modal">
             <div class="overlay"></div>
+
             <div class="img-modal-window">
-                <a class="prev" :href="'#' + prev" v-if="prev">< </a>
-                <a class="next" :href="'#' + next" v-if="next"> ></a>
                 <button type="button" class="close-modal" name="close" @click="clickClose">X</button>
                 <h2>{{title}}</h2>
                 <img :src="url" :alt="title">
+                <br>
                 <button type="button" class="del-img" name="delete" @click="delImg">DELETE</button>
                 <p>{{desc}}</p>
                 <p>{{username}}</p>
+                <a class="prev" :href="'#' + prev" v-if="prev">< </a>
+                <a class="next" :href="'#' + next" v-if="next"> ></a>
                 <add-comment :imgid="imgid" v-on:insert="updateComments"></add-comment>
                 <comments
                     v-for="c in comments"
@@ -79,6 +81,7 @@
     <script id="add-comment-template" type="text/x-template">
         <div class="add-comment">
             <input type="text" name="comment" v-model="comment" placeholder="your comment"></input>
+            <br>
             <input type="text" name="username" v-model="username" placeholder="username"></input>
             <button type="button" name="button" @click="addComment">Submit</button>
         </div>
