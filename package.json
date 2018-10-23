@@ -20,6 +20,7 @@
     "spiced-pg": "^1.0.0",
     "uid-safe": "^2.1.5",
     "vue-masonry": "^0.11.6",
+    "vue-masonry-css": "^1.0.3",
     "vue-scrollto": "^2.13.0"
   },
   "repository": {

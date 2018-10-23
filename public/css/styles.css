@@ -39,8 +39,6 @@ input {
     margin-right: 0.5em;
     margin-top: 0.5em;
     width: 17em;
-    /* border: none; */
-    /* border-radius: 5px; */
     border: solid 1px lightgray;
 }
 button {
@@ -67,24 +65,20 @@ header {
     margin-bottom: 1em;
 }
 .card-container {
+    /* width: 97%; */
     padding: 1em;
     padding-top: 0;
 }
 .img-card {
-    width: 18em;
+    width: 97%;
     margin-bottom: 0.5em;
-    margin-right: 0.5em;
     padding: 0.5em;
     border-radius: 10px;
     border: 1px solid lightgrey;
     border-radius: 0.5em;
     background-color: white;
-    top: 100%;
-    left: 50%;
 }
 .img-card a {
-    display: flex;
-    justify-content: center;
     width: 100%;
     height: 100%;
 }
@@ -111,11 +105,6 @@ header {
     padding: 1em;
 }
 .img-modal-window img {
-    /* margin: auto; */
-    /* max-width: 50em;
-    max-height: 42em; */
-    /* width: 100%;
-    height: 100%; */
     max-height: 80vh;
     max-width: 70vw;
     border-radius: 0.5em;

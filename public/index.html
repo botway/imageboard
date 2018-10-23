@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>IMAGE-BOARD</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/styles.css">
     <link href="https://fonts.googleapis.com/css?family=Life+Savers:700" rel="stylesheet">
 </head>
@@ -28,14 +29,19 @@
             </div>
         </header>
         <div class="container">
-            <div v-masonry class="card-container" transition-duration="0.7s" item-selector=".img-card">
-                <div v-masonry-tile class="img-card" v-for="(img,index) in images">
+            <div class="card-container">
+                <masonry
+                    :cols="{default: 5, 1200: 4, 992: 3, 768: 2, 600: 1}"
+                    :gutter="{default: '20px', 700: '15px'}"
+                >
+                <div class="img-card" v-for="(img,index) in images">
                     <div v-if="index == images.length - 1" class="last"></div>
                     <a :href="'#' + img.id"><img :src="img.url" :alt="img.title"></a>
                     <h3>{{img.title}}</h3>
                     <p>{{img.description}}</p>
                     <h4>{{img.username}}</h4>
                 </div>
+                <masonry>
             </div>
             <button v-if="hasMore" type="button" name="more" @click="getMore"
             v-scroll-to="{
@@ -88,7 +94,7 @@
     </script>
     <script src="/js/vue.js"></script>
     <script src="https://unpkg.com/vue-scrollto@2.7.9/vue-scrollto.js"></script>
-    <script src="/js/vue-masonry-plugin-window.js"></script>
+    <script src="https://unpkg.com/vue-masonry-css"></script>
     <script src="/js/axios.min.js"></script>
     <script src="/js/script.js"></script>
 </body>

@@ -1,6 +1,6 @@
 (function() {
-    var VueMasonryPlugin = window["vue-masonry-plugin"].VueMasonryPlugin;
-    Vue.use(VueMasonryPlugin);
+    // var VueMasonryPlugin = window["vue-masonry-plugin"].VueMasonryPlugin;
+    // Vue.use(VueMasonryPlugin);
     Vue.component("add-comment", {
         props: ["imgid"],
         data: function() {
